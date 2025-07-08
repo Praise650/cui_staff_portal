@@ -9,7 +9,7 @@ function ProfileComponent() {
         { title: 'Profile', path: '/profile' },
         { title: 'Settings', path: '/settings' },
         { title: 'Report', path: '/report' },
-        { title: 'Sign Out', path: '/auth/signout' },
+        { title: 'Sign Out', path: '/' },
     ];
     const [dropdown, showDropdown] = useState(false);
 
