@@ -10,7 +10,7 @@ export default function NotificationPage() {
       message: 'Hey! Are we still on for the meeting tomorrow?',
       time: '2 minutes ago',
       read: false,
-      avatar: 'https://images.unsplash.com/photo-1494790108755-2616b9c3c999?w=40&h=40&fit=crop&crop=face',
+      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face',
       details: {
         sender: 'Sarah Johnson',
         fullMessage: 'Hey! Are we still on for the meeting tomorrow? I have some updates on the project that I\'d like to discuss. Also, should we invite Mike from the design team? Let me know what you think!',

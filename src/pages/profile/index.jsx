@@ -133,57 +133,58 @@ import avatar from '../../assets/images/default-avatar-photo.jpg';
 
 // export default ProfilePage;
 
+// import React from 'react';
 
-export default function ProfilePage() {
+const StaffProfile = () => {
   return (
-    <div className="max-w-4xl mx-auto p-6">
-      {/* Card container */}
-      <div className="bg-white rounded-2xl shadow-md p-6 flex flex-col md:flex-row items-center md:items-start space-y-6 md:space-y-0 md:space-x-8">
-        {/* Profile picture */}
-        <div className="flex-shrink-0">
+    <div className=" mx-auto ">
+      <div className="bg-white p-6 md:flex md:space-x-6">
+        {/* Profile Picture */}
+        <div className="flex-shrink-0 flex justify-center md:justify-start">
           <img
-            src="https://i.pravatar.cc/150?img=8"
-            alt="Profile"
-            className="w-40 h-40 rounded-full object-cover border-4 border-blue-500"
+            className="w-40 h-40 rounded-full object-cover border-4 border-indigo-500"
+            src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face"
+            alt="Staff profile"
           />
         </div>
-
-        {/* Info section */}
-        <div className="flex-1">
-          <h2 className="text-2xl font-semibold mb-1">Alex Johnson</h2>
-          <p className="text-blue-600 mb-4">Senior Software Engineer</p>
-
-          <div className="text-gray-600 mb-4">
-            <p><span className="font-semibold">Department:</span> Engineering</p>
-            <p><span className="font-semibold">Email:</span> alex.johnson@example.com</p>
-            <p><span className="font-semibold">Phone:</span> +1 (555) 123-4567</p>
+        
+        {/* Profile Info */}
+        <div className="mt-4 md:mt-0 flex-1">
+          <h2 className="text-2xl font-semibold text-gray-800">Dr. Jane Doe</h2>
+          <p className="text-indigo-600">Associate Professor, Department of Computer Science</p>
+          <p className="mt-2 text-gray-600">
+            Dr. Jane Doe specializes in artificial intelligence and data science,
+            with over 10 years of teaching and research experience.
+          </p>
+          
+          <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <h3 className="text-gray-700 font-medium">Email</h3>
+              <p className="text-gray-600">jane.doe@university.edu</p>
+            </div>
+            <div>
+              <h3 className="text-gray-700 font-medium">Phone</h3>
+              <p className="text-gray-600">+1 (123) 456-7890</p>
+            </div>
+            <div>
+              <h3 className="text-gray-700 font-medium">Office</h3>
+              <p className="text-gray-600">Room 302, Science Building</p>
+            </div>
+            <div>
+              <h3 className="text-gray-700 font-medium">Joined</h3>
+              <p className="text-gray-600">September 2015</p>
+            </div>
           </div>
-
-          <div>
-            <h3 className="text-lg font-semibold mb-2">About</h3>
-            <p className="text-gray-700">
-              Passionate software engineer with 8+ years of experience in building scalable web applications.
-              Loves mentoring junior developers and exploring new technologies.
-            </p>
+          
+          <div className="mt-6">
+            <button className="bg-indigo-600 text-white px-4 py-2 rounded-lg shadow hover:bg-indigo-700 transition">
+              Edit Profile
+            </button>
           </div>
-        </div>
-      </div>
-
-      {/* Stats / quick info */}
-      <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-white rounded-2xl shadow-md p-4 text-center">
-          <p className="text-2xl font-bold text-blue-600">8</p>
-          <p className="text-gray-600">Years at Company</p>
-        </div>
-        <div className="bg-white rounded-2xl shadow-md p-4 text-center">
-          <p className="text-2xl font-bold text-blue-600">24</p>
-          <p className="text-gray-600">Projects Completed</p>
-        </div>
-        <div className="bg-white rounded-2xl shadow-md p-4 text-center">
-          <p className="text-2xl font-bold text-blue-600">15</p>
-          <p className="text-gray-600">Team Members Mentored</p>
         </div>
       </div>
     </div>
   );
-}
+};
+
+export default StaffProfile;
