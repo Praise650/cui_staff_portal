@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Bell, Check, X, AlertCircle, MessageCircle, Heart, Settings, Filter, Search, ChevronRight, Clock, User } from 'lucide-react';
+import { Bell, Check, X, AlertCircle, MessageCircle, Heart, Settings, Filter, Search, ChevronRight, Clock, User, ChevronDown } from 'lucide-react';
 
 export default function NotificationPage() {
   const [notifications, setNotifications] = useState([
@@ -112,6 +112,7 @@ export default function NotificationPage() {
   const [filter, setFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedNotification, setSelectedNotification] = useState(null);
+  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
 
   const getNotificationIcon = (type) => {
     switch (type) {
@@ -129,16 +130,25 @@ export default function NotificationPage() {
   };
 
   const markAsRead = (id) => {
-    setNotifications(notifications.map(notif => 
+    setNotifications(notifications.map(notif =>
       notif.id === id ? { ...notif, read: true } : notif
     ));
   };
 
   const handleNotificationClick = (notification) => {
     setSelectedNotification(notification);
+    setIsBottomSheetOpen(true);
     if (!notification.read) {
       markAsRead(notification.id);
     }
+  };
+
+  const closeBottomSheet = () => {
+    setIsBottomSheetOpen(false);
+    // Small delay to prevent flickering
+    setTimeout(() => {
+      setSelectedNotification(null);
+    }, 300);
   };
 
   const markAllAsRead = () => {
@@ -148,19 +158,19 @@ export default function NotificationPage() {
   const deleteNotification = (id) => {
     setNotifications(notifications.filter(notif => notif.id !== id));
     if (selectedNotification?.id === id) {
-      setSelectedNotification(null);
+      closeBottomSheet();
     }
   };
 
   const filteredNotifications = notifications.filter(notif => {
-    const matchesFilter = filter === 'all' || 
+    const matchesFilter = filter === 'all' ||
       (filter === 'unread' && !notif.read) ||
       (filter === 'read' && notif.read) ||
       notif.type === filter;
-    
+
     const matchesSearch = notif.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       notif.message.toLowerCase().includes(searchTerm.toLowerCase());
-    
+
     return matchesFilter && matchesSearch;
   });
 
@@ -188,7 +198,7 @@ export default function NotificationPage() {
                 </p>
               </div>
             </div>
-            
+
             {unreadCount > 0 && (
               <button
                 onClick={markAllAsRead}
@@ -204,7 +214,7 @@ export default function NotificationPage() {
 
       <div className="max-w-7xl mx-auto px-4 py-6">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Left Panel - Notifications List */}
+          {/* Left Panel - Notifications List (Full width on mobile, 2/3 on desktop) */}
           <div className="lg:col-span-2">
             {/* Search and Filter */}
             <div className="bg-white rounded-lg shadow-sm p-4 mb-6">
@@ -220,7 +230,7 @@ export default function NotificationPage() {
                     className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                 </div>
-                
+
                 {/* Filter */}
                 <div className="flex items-center space-x-2">
                   <Filter className="w-4 h-4 text-gray-500" />
@@ -256,9 +266,8 @@ export default function NotificationPage() {
                   <div
                     key={notification.id}
                     onClick={() => handleNotificationClick(notification)}
-                    className={`bg-white rounded-lg shadow-sm p-4 transition-all hover:shadow-md cursor-pointer ${
-                      !notification.read ? 'border-l-4 border-blue-500' : ''
-                    } ${selectedNotification?.id === notification.id ? 'ring-2 ring-blue-500' : ''}`}
+                    className={`bg-white rounded-lg shadow-sm p-4 transition-all hover:shadow-md cursor-pointer ${!notification.read ? 'border-l-4 border-blue-500' : ''
+                      } ${selectedNotification?.id === notification.id ? 'ring-2 ring-blue-500' : ''}`}
                   >
                     <div className="flex items-start space-x-3">
                       {/* Avatar or Icon */}
@@ -280,9 +289,8 @@ export default function NotificationPage() {
                       <div className="flex-1 min-w-0">
                         <div className="flex items-start justify-between">
                           <div className="flex-1">
-                            <h3 className={`text-sm font-medium ${
-                              !notification.read ? 'text-gray-900' : 'text-gray-700'
-                            }`}>
+                            <h3 className={`text-sm font-medium ${!notification.read ? 'text-gray-900' : 'text-gray-700'
+                              }`}>
                               {notification.title}
                             </h3>
                             <p className="text-sm text-gray-600 mt-1">
@@ -292,7 +300,7 @@ export default function NotificationPage() {
                               {notification.time}
                             </p>
                           </div>
-                          
+
                           {/* Actions */}
                           <div className="flex items-center space-x-2 ml-4">
                             <ChevronRight className="w-4 h-4 text-gray-400" />
@@ -328,8 +336,8 @@ export default function NotificationPage() {
             </div>
           </div>
 
-          {/* Right Panel - Details */}
-          <div className="lg:col-span-1">
+          {/* Right Panel - Details (Desktop only) */}
+          <div className="hidden lg:block lg:col-span-1">
             <div className="bg-white rounded-lg shadow-sm p-6 sticky top-6">
               {selectedNotification ? (
                 <div>
@@ -480,6 +488,181 @@ export default function NotificationPage() {
           </div>
         </div>
       </div>
+
+      {/* Bottom Sheet (Mobile only) */}
+      {isBottomSheetOpen && (
+        <div className="fixed inset-0 z-50 lg:hidden">
+          {/* Backdrop */}
+          <div
+            className="fixed inset-0 bg-black bg-opacity-50 transition-opacity"
+            onClick={closeBottomSheet}
+          />
+
+          {/* Bottom Sheet */}
+          <div
+            className={`fixed bottom-0 left-0 right-0 bg-white rounded-t-2xl shadow-xl transform transition-transform duration-300 ease-out ${isBottomSheetOpen ? 'translate-y-0' : 'translate-y-full'
+              }`}
+            style={{ maxHeight: '85vh' }}
+          >
+            {/* Handle */}
+            <div className="flex justify-center py-3">
+              <div className="w-12 h-1 bg-gray-300 rounded-full" />
+            </div>
+
+            {/* Header */}
+            <div className="flex items-center justify-between px-6 py-4 border-b">
+              <h2 className="text-lg font-semibold text-gray-900">Notification Details</h2>
+              <button
+                onClick={closeBottomSheet}
+                className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg"
+              >
+                <ChevronDown className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Content */}
+            <div className="overflow-y-auto p-6" style={{ maxHeight: 'calc(85vh - 120px)' }}>
+              {selectedNotification && (
+                <div>
+                  {/* Header */}
+                  <div className="flex items-start space-x-3 mb-4">
+                    {selectedNotification.avatar ? (
+                      <img
+                        src={selectedNotification.avatar}
+                        alt="Avatar"
+                        className="w-12 h-12 rounded-full"
+                      />
+                    ) : (
+                      <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
+                        {getNotificationIcon(selectedNotification.type)}
+                      </div>
+                    )}
+                    <div className="flex-1">
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        {selectedNotification.title}
+                      </h3>
+                      <div className="flex items-center space-x-2 text-sm text-gray-500 mt-1">
+                        <User className="w-4 h-4" />
+                        <span>{selectedNotification.details.sender}</span>
+                      </div>
+                      <div className="flex items-center space-x-2 text-sm text-gray-500 mt-1">
+                        <Clock className="w-4 h-4" />
+                        <span>{selectedNotification.time}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Content */}
+                  <div className="space-y-6">
+                    <div>
+                      <h4 className="text-sm font-medium text-gray-900 mb-2">Message</h4>
+                      <p className="text-sm text-gray-700 leading-relaxed">
+                        {selectedNotification.details.fullMessage}
+                      </p>
+                    </div>
+
+                    {/* Additional Details */}
+                    {selectedNotification.details.changelog && (
+                      <div>
+                        <h4 className="text-sm font-medium text-gray-900 mb-2">What's New</h4>
+                        <ul className="text-sm text-gray-700 space-y-1">
+                          {selectedNotification.details.changelog.map((item, index) => (
+                            <li key={index} className="flex items-start space-x-2">
+                              <span className="text-green-500 mt-1">•</span>
+                              <span>{item}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+
+                    {selectedNotification.details.deviceInfo && (
+                      <div>
+                        <h4 className="text-sm font-medium text-gray-900 mb-2">Device Information</h4>
+                        <div className="bg-gray-50 p-3 rounded-lg text-sm">
+                          <div className="grid grid-cols-1 gap-3">
+                            <div>
+                              <span className="text-gray-600">Device:</span>
+                              <p className="font-medium">{selectedNotification.details.deviceInfo.device}</p>
+                            </div>
+                            <div>
+                              <span className="text-gray-600">Location:</span>
+                              <p className="font-medium">{selectedNotification.details.deviceInfo.location}</p>
+                            </div>
+                            <div>
+                              <span className="text-gray-600">Browser:</span>
+                              <p className="font-medium">{selectedNotification.details.deviceInfo.browser}</p>
+                            </div>
+                            <div>
+                              <span className="text-gray-600">IP:</span>
+                              <p className="font-medium">{selectedNotification.details.deviceInfo.ip}</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {selectedNotification.details.meetingDetails && (
+                      <div>
+                        <h4 className="text-sm font-medium text-gray-900 mb-2">Meeting Details</h4>
+                        <div className="bg-gray-50 p-3 rounded-lg text-sm">
+                          <div className="space-y-3">
+                            <div>
+                              <span className="text-gray-600">Time:</span>
+                              <p className="font-medium">{selectedNotification.details.meetingDetails.time}</p>
+                            </div>
+                            <div>
+                              <span className="text-gray-600">Location:</span>
+                              <p className="font-medium">{selectedNotification.details.meetingDetails.location}</p>
+                            </div>
+                            <div>
+                              <span className="text-gray-600">Agenda:</span>
+                              <ul className="mt-1 space-y-1">
+                                {selectedNotification.details.meetingDetails.agenda.map((item, index) => (
+                                  <li key={index} className="flex items-start space-x-2">
+                                    <span className="text-blue-500 mt-1">•</span>
+                                    <span>{item}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {selectedNotification.details.photoPreview && (
+                      <div>
+                        <h4 className="text-sm font-medium text-gray-900 mb-2">Photo</h4>
+                        <img
+                          src={selectedNotification.details.photoPreview}
+                          alt="Photo preview"
+                          className="w-full rounded-lg"
+                        />
+                      </div>
+                    )}
+
+                    {/* Actions */}
+                    <div className="pt-4 border-t">
+                      <h4 className="text-sm font-medium text-gray-900 mb-3">Actions</h4>
+                      <div className="space-y-2">
+                        {selectedNotification.details.actions.map((action, index) => (
+                          <button
+                            key={index}
+                            className="w-full px-4 py-3 text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors"
+                          >
+                            {action}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
