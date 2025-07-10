@@ -27,9 +27,8 @@ const Login = () => {
         handleClick={handleLogin}
       />
 
-
-      {/* Right Panel - Welcome Section */}
-      <div className="w-1/2 bg-gradient-to-br from-purple-600 to-purple-800 flex flex-col justify-center items-center px-12 relative overflow-hidden">
+      {/* Right Panel - Welcome Section (Hidden on smaller screens) */}
+      <div className="hidden lg:flex w-1/2 bg-gradient-to-br from-purple-600 to-purple-800 flex-col justify-center items-center px-12 relative overflow-hidden">
         {/* Background decorative elements */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-20 left-20 w-32 h-32 rounded-full border border-white"></div>
